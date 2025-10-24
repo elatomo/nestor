@@ -2,6 +2,9 @@
 name = "nestor"
 version = "0.1.0"
 description = "Personal AI assistant."
+authors = [
+    { name = "José Fernández Ramos", email = "jose@navika.io" }
+]
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
