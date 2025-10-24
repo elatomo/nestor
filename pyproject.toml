@@ -1,0 +1,22 @@
+[project]
+name = "nestor"
+version = "0.1.0"
+description = "Personal AI assistant."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pydantic-ai-slim[openai,duckduckgo,logfire]>=1.2.1",
+    "pydantic-settings>=2.11.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "ruff>=0.14.1",
+]
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+
+[tool.ruff.lint]
+extend-select = ["I"]
