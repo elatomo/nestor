@@ -14,6 +14,8 @@ class Settings(BaseSettings):
 
     # LLM Configuration
     openai_api_key: SecretStr
+    default_model: str = "gpt-4.1-nano"
+    max_retries: int = 2
 
 
 # Global settings instance
