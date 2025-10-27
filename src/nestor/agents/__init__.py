@@ -1,6 +1,6 @@
 """Agent creation utilities for Néstor."""
 
-from typing import TypeVar
+from typing import TypeVar, overload
 
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
@@ -9,6 +9,29 @@ from pydantic_ai.providers.openai import OpenAIProvider
 from ..config import settings
 
 T = TypeVar("T")
+D = TypeVar("D")
+
+
+@overload
+def create_agent(
+    output_type: type[T],
+    *,
+    instructions: str,
+    model_name: str | None = None,
+    deps_type: None = None,
+    name: str | None = None,
+) -> Agent[None, T]: ...
+
+
+@overload
+def create_agent(
+    output_type: type[T],
+    *,
+    instructions: str,
+    model_name: str | None = None,
+    deps_type: type[D],
+    name: str | None = None,
+) -> Agent[D, T]: ...
 
 
 def create_agent(
@@ -16,14 +39,16 @@ def create_agent(
     *,
     instructions: str = "You are Néstor, a helpful AI assistant.",
     model_name: str | None = None,
+    deps_type: type[D] | None = None,
     name: str | None = None,
-) -> Agent[None, T]:
+) -> Agent[None, T] | Agent[D, T]:
     """Create a Néstor agent with common configuration.
 
     Args:
         output_type: Type of the agent's output
         instructions: Agent instructions (role, capabilities, style)
         model_name: Override default OpenAI model from settings
+        deps_type: Optional dependency type (None for no dependencies)
         name: Agent name, used for pydantic-ai's internal identification
 
     Returns:
@@ -35,10 +60,20 @@ def create_agent(
         provider=OpenAIProvider(api_key=settings.openai_api_key.get_secret_value()),
     )
 
-    return Agent(
-        model=model,
-        output_type=output_type,
-        instructions=instructions,
-        retries=settings.max_retries,
-        name=name,
-    )
+    if deps_type is None:
+        return Agent(
+            model=model,
+            output_type=output_type,
+            instructions=instructions,
+            retries=settings.max_retries,
+            name=name,
+        )
+    else:
+        return Agent(
+            model=model,
+            deps_type=deps_type,
+            output_type=output_type,
+            instructions=instructions,
+            retries=settings.max_retries,
+            name=name,
+        )
