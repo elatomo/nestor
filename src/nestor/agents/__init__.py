@@ -16,6 +16,7 @@ def create_agent(
     *,
     instructions: str = "You are Néstor, a helpful AI assistant.",
     model_name: str | None = None,
+    name: str | None = None,
 ) -> Agent[None, T]:
     """Create a Néstor agent with common configuration.
 
@@ -23,6 +24,7 @@ def create_agent(
         output_type: Type of the agent's output
         instructions: Agent instructions (role, capabilities, style)
         model_name: Override default OpenAI model from settings
+        name: Agent name, used for pydantic-ai's internal identification
 
     Returns:
         Configured agent instance
@@ -38,4 +40,5 @@ def create_agent(
         output_type=output_type,
         instructions=instructions,
         retries=settings.max_retries,
+        name=name,
     )
