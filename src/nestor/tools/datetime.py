@@ -1,4 +1,3 @@
-# src/nestor/tools/datetime.py
 """Date and time information tools."""
 
 from datetime import UTC, datetime
