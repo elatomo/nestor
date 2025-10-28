@@ -468,8 +468,9 @@ wheels = [
 [[package]]
 name = "nestor"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
+    { name = "click" },
     { name = "pydantic-ai-slim", extra = ["duckduckgo", "logfire", "openai"] },
     { name = "pydantic-settings" },
 ]
@@ -482,6 +483,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "click", specifier = ">=8.3.0" },
     { name = "pydantic-ai-slim", extras = ["openai", "duckduckgo", "logfire"], specifier = ">=1.2.1" },
     { name = "pydantic-settings", specifier = ">=2.11.0" },
 ]
