@@ -77,19 +77,23 @@ async def web_search(
         timelimit,
     )
 
-    client = DDGS()
+    try:
+        client = DDGS()
 
-    search_func = functools.partial(
-        client.text,
-        query,
-        region=region,
-        safesearch=settings.safesearch,
-        timelimit=timelimit,
-        max_results=max_results,
-        backend=settings.search_backend,
-    )
+        search_func = functools.partial(
+            client.text,
+            query,
+            region=region,
+            safesearch=settings.safesearch,
+            timelimit=timelimit,
+            max_results=max_results,
+            backend=settings.search_backend,
+        )
 
-    # Run in thread pool (DDGS is sync)
-    results = await anyio.to_thread.run_sync(search_func)
+        # Run in thread pool (DDGS is sync)
+        results = await anyio.to_thread.run_sync(search_func)
 
-    return _search_result_adapter.validate_python(results)
+        return _search_result_adapter.validate_python(results)
+    except Exception:
+        logger.exception("Search failed for query=%r", query)
+        return []  # Let the model handle empty results gracefully
