@@ -1,6 +1,7 @@
 """Néstor's main assistant agent."""
 
 from ..tools.datetime import get_current_date, get_current_time
+from ..tools.websearch import web_search
 from . import create_agent
 
 INSTRUCTIONS = """You are Néstor, a helpful AI assistant.
@@ -15,3 +16,4 @@ agent = create_agent(
 
 agent.tool(get_current_date)
 agent.tool(get_current_time)
+agent.tool(web_search)
