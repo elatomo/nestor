@@ -12,6 +12,8 @@ from pydantic import TypeAdapter
 from pydantic_ai import RunContext
 from typing_extensions import TypedDict
 
+from nestor.config import settings
+
 logger = logging.getLogger(__name__)
 
 
@@ -84,7 +86,7 @@ async def web_search(
         safesearch="moderate",
         timelimit=timelimit,
         max_results=max_results,
-        backend="auto",
+        backend=settings.search_backend,
     )
 
     # Run in thread pool (DDGS is sync)
