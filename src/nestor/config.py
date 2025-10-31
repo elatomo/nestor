@@ -3,6 +3,8 @@
 Loads settings from environment variables and .env file.
 """
 
+from typing import Literal
+
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -21,6 +23,10 @@ class Settings(BaseSettings):
     search_backend: str = Field(
         default="auto",
         description="DDGS backend(s): 'auto', 'wikipedia,duckduckgo', etc.",
+    )
+    safesearch: Literal["on", "moderate", "off"] = Field(
+        default="moderate",
+        description="Safe search level: 'on', 'moderate', or 'off'",
     )
 
 

@@ -83,7 +83,7 @@ async def web_search(
         client.text,
         query,
         region=region,
-        safesearch="moderate",
+        safesearch=settings.safesearch,
         timelimit=timelimit,
         max_results=max_results,
         backend=settings.search_backend,
