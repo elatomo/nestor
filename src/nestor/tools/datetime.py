@@ -1,9 +1,12 @@
 """Date and time information tools."""
 
+import logging
 from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
 from pydantic_ai import RunContext
+
+logger = logging.getLogger(__name__)
 
 
 def get_current_time(ctx: RunContext[None], timezone: str = "UTC") -> str:
@@ -20,8 +23,9 @@ def get_current_time(ctx: RunContext[None], timezone: str = "UTC") -> str:
         tz = ZoneInfo(timezone)
         now = datetime.now(tz)
         return now.isoformat()
-    except Exception as e:
-        return f"Error getting time for timezone '{timezone}': {e}"
+    except Exception:
+        logger.exception("Error getting time for timezone %s", timezone)
+        raise
 
 
 def get_current_date(ctx: RunContext[None]) -> str:
