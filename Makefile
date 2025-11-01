@@ -54,11 +54,18 @@ typecheck: ensure-uv  ## Run type checking
 	uv run mypy src
 
 
+# Testing
+# -------
+
+.PHONY: test
+test: ensure-uv  ## Run tests
+	uv run pytest tests/
+
 # Composite Checks
 # ----------------
 
 .PHONY: check
-check: typecheck lint  ## Run all checks
+check: typecheck lint test  ## Run all checks
 
 
 # Build & Release
