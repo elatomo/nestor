@@ -61,6 +61,11 @@ typecheck: ensure-uv  ## Run type checking
 test: ensure-uv  ## Run tests
 	uv run pytest tests/
 
+.PHONY: coverage
+coverage: ensure-uv  ## Check test coverage
+	uv run pytest --cov=src --cov-report=term-missing tests/
+
+
 # Composite Checks
 # ----------------
 
