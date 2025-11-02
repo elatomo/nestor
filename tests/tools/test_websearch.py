@@ -104,3 +104,19 @@ class TestWebSearch:
 
         assert results == []
         assert "Network error" in caplog.text
+
+    @pytest.mark.asyncio
+    async def test_failed_validation_returns_empty_list(self, ctx, ddgs, caplog):
+        """Should return empty list if DDGS returns invalid structure."""
+        ddgs.text.return_value = [
+            # Missing 'body' key
+            {"title": "Test", "href": "https://example.com"}
+        ]
+
+        with caplog.at_level(level=logging.ERROR):
+            results = await web_search(
+                ctx, "test query", max_results=5, region="ww-en", timelimit=None
+            )
+
+        assert results == []
+        assert "ValidationError" in caplog.text
