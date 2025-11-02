@@ -1,3 +1,4 @@
+import logging
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -90,3 +91,16 @@ class TestWebSearch:
         )
 
         assert results == []
+
+    @pytest.mark.asyncio
+    async def test_search_failure_returns_empty_list(self, ctx, ddgs, caplog):
+        """Should return empty list on search failure."""
+        ddgs.text.side_effect = Exception("Network error")
+
+        with caplog.at_level(level=logging.ERROR):
+            results = await web_search(
+                ctx, "test query", max_results=5, region="ww-en", timelimit=None
+            )
+
+        assert results == []
+        assert "Network error" in caplog.text
