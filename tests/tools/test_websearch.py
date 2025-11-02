@@ -75,3 +75,18 @@ class TestWebSearch:
 
         call_kwargs = ddgs.text.call_args[1]
         assert call_kwargs["timelimit"] == "w"
+
+    @pytest.mark.asyncio
+    async def test_empty_results(self, ctx, ddgs):
+        """Should handle empty results gracefully."""
+        ddgs.text.return_value = []
+
+        results = await web_search(
+            ctx,
+            "Quantum pineapple teleportation method",
+            max_results=5,
+            region="ww-en",
+            timelimit=None,
+        )
+
+        assert results == []
