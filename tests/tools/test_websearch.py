@@ -59,3 +59,19 @@ class TestWebSearch:
             max_results=5,
             backend=settings.search_backend,
         )
+
+    @pytest.mark.asyncio
+    async def test_search_with_timelimit(self, ctx, ddgs, search_results):
+        """Should pass timelimit parameter to DDGS."""
+        ddgs.text.return_value = search_results
+
+        await web_search(
+            ctx,
+            "Latest news",
+            max_results=10,
+            region="us-en",
+            timelimit="w",
+        )
+
+        call_kwargs = ddgs.text.call_args[1]
+        assert call_kwargs["timelimit"] == "w"
