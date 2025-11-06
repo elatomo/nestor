@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Néstor logo" width="300">
+  <img src="https://raw.githubusercontent.com/elatomo/nestor/main/assets/logo.png" alt="Néstor logo" width="300">
   <p><em><b>Néstor</b> is a personal AI assistant inspired by Tintin's faithful butler 🎩</em></p>
 </div>
 
