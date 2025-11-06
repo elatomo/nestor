@@ -1,6 +1,7 @@
-# Néstor
-
-A personal AI assistant inspired by Tintin's faithful butler 🎩.
+<div align="center">
+  <img src="assets/logo.png" alt="Néstor logo" width="300">
+  <p><em><b>Néstor</b> is a personal AI assistant inspired by Tintin's faithful butler 🎩</em></p>
+</div>
 
 > [!CAUTION]
 > Personal experiment in progress. Features may appear, disappear, or mutate
