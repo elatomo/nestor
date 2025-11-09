@@ -1,5 +1,6 @@
 """Agent creation utilities for Néstor."""
 
+from types import NoneType
 from typing import TypeVar, overload
 
 from pydantic_ai import Agent
@@ -60,20 +61,11 @@ def create_agent(
         provider=OpenAIProvider(api_key=settings.openai_api_key.get_secret_value()),
     )
 
-    if deps_type is None:
-        return Agent(
-            model=model,
-            output_type=output_type,
-            instructions=instructions,
-            retries=settings.max_retries,
-            name=name,
-        )
-    else:
-        return Agent(
-            model=model,
-            deps_type=deps_type,
-            output_type=output_type,
-            instructions=instructions,
-            retries=settings.max_retries,
-            name=name,
-        )
+    return Agent(
+        model=model,
+        output_type=output_type,
+        instructions=instructions,
+        retries=settings.max_retries,
+        name=name,
+        deps_type=deps_type or NoneType,
+    )
