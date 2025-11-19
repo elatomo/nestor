@@ -31,6 +31,10 @@ clean:  ## Remove all build artifacts
 # Development Workflows
 # ---------------------
 
+.PHONY: run
+run: ensure-uv  ## Run the CLI (usage: make run ARGS="your query")
+	uv run nestor $(ARGS)
+
 .PHONY: shell
 shell: ensure-uv  ## Start Python REPL with project environment
 	uv run python
