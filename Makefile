@@ -37,7 +37,7 @@ run: ensure-uv  ## Run the CLI (usage: make run ARGS="your query")
 
 .PHONY: shell
 shell: ensure-uv  ## Start Python REPL with project environment
-	uv run python
+	uv run python -m asyncio
 
 
 # Code Quality
