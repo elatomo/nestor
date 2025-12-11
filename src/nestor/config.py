@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     """Application settings."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_prefix="nestor_", frozen=True
+        env_file=".env", env_prefix="nestor_", frozen=True, extra="ignore"
     )
 
     # LLM
