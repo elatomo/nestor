@@ -3,8 +3,25 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from nestor.config import settings
+from nestor.dependencies import AssistantDeps
 from nestor.tools.websearch import web_search
+
+
+@pytest.fixture
+def deps():
+    """Sample dependencies."""
+    return AssistantDeps(
+        search_backend="auto",
+        safesearch="moderate",
+    )
+
+
+@pytest.fixture
+def ctx(deps):
+    """Mock RunContext with deps."""
+    mock_ctx = MagicMock()
+    mock_ctx.deps = deps
+    return mock_ctx
 
 
 @pytest.fixture
@@ -55,10 +72,10 @@ class TestWebSearch:
         ddgs.text.assert_called_once_with(
             "Python programming",
             region="ww-en",
-            safesearch="moderate",
+            safesearch=ctx.deps.safesearch,
             timelimit=None,
             max_results=5,
-            backend=settings.search_backend,
+            backend=ctx.deps.search_backend,
         )
 
     @pytest.mark.asyncio
@@ -120,3 +137,21 @@ class TestWebSearch:
 
         assert results == []
         assert "ValidationError" in caplog.text
+
+    @pytest.mark.asyncio
+    async def test_uses_deps_configuration(self, ddgs, search_results):
+        """Should use safesearch and backend from deps."""
+        # Custom deps
+        custom_deps = AssistantDeps(
+            search_backend="wikipedia",
+            safesearch="off",
+        )
+        ctx = MagicMock(deps=custom_deps)
+
+        ddgs.text.return_value = search_results
+
+        await web_search(ctx, "test", max_results=5, region="ww-en", timelimit=None)
+
+        call_kwargs = ddgs.text.call_args.kwargs
+        assert call_kwargs["safesearch"] == custom_deps.safesearch
+        assert call_kwargs["backend"] == custom_deps.search_backend

@@ -10,6 +10,7 @@ from pydantic_ai.exceptions import UnexpectedModelBehavior
 
 from .agents.assistant import agent
 from .config import settings
+from .dependencies import AssistantDeps
 
 logger = logging.getLogger("nestor")
 
@@ -81,9 +82,15 @@ async def _run_assistant(
     logger.info("Running assistant with prompt: %r", prompt)
 
     try:
+        deps = AssistantDeps(
+            search_backend=settings.search_backend,
+            safesearch=settings.safesearch,
+        )
+
         result = await agent.run(
             prompt,
             message_history=message_history,
+            deps=deps,
         )
 
         click.echo(f"\n{result.output}\n")

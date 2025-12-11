@@ -2,14 +2,17 @@
 
 import logging
 from datetime import UTC, datetime
+from typing import TypeVar
 from zoneinfo import ZoneInfo
 
 from pydantic_ai import RunContext
 
 logger = logging.getLogger(__name__)
 
+D = TypeVar("D")  # Generic dependency type
 
-def get_current_time(ctx: RunContext[None], timezone: str = "UTC") -> str:
+
+def get_current_time(ctx: RunContext[D], timezone: str = "UTC") -> str:
     """Get current time in the specified timezone.
 
     Args:
@@ -28,7 +31,7 @@ def get_current_time(ctx: RunContext[None], timezone: str = "UTC") -> str:
         raise
 
 
-def get_current_date(ctx: RunContext[None]) -> str:
+def get_current_date(ctx: RunContext[D]) -> str:
     """Get current date in ISO format (YYYY-MM-DD).
 
     Args:

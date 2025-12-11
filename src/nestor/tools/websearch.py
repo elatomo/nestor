@@ -12,7 +12,7 @@ from pydantic import TypeAdapter
 from pydantic_ai import RunContext
 from typing_extensions import TypedDict
 
-from nestor.config import settings
+from ..dependencies import AssistantDeps
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ _search_result_adapter = TypeAdapter(list[SearchResult])
 
 
 async def web_search(
-    ctx: RunContext[None],
+    ctx: RunContext[AssistantDeps],
     query: str,
     *,
     max_results: int,
@@ -84,10 +84,10 @@ async def web_search(
             client.text,
             query,
             region=region,
-            safesearch=settings.safesearch,
+            safesearch=ctx.deps.safesearch,
             timelimit=timelimit,
             max_results=max_results,
-            backend=settings.search_backend,
+            backend=ctx.deps.search_backend,
         )
 
         # Run in thread pool (DDGS is sync)
