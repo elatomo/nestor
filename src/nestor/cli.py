@@ -8,7 +8,7 @@ from typing import Any
 import click
 from pydantic_ai.exceptions import UnexpectedModelBehavior
 
-from .agents.assistant import agent
+from .agents.assistant import create_assistant_agent
 from .config import settings
 from .dependencies import AssistantDeps
 
@@ -82,6 +82,12 @@ async def _run_assistant(
     logger.info("Running assistant with prompt: %r", prompt)
 
     try:
+        agent = create_assistant_agent(
+            api_key=settings.openai_api_key,
+            model_name=settings.default_model,
+            max_retries=settings.max_retries,
+        )
+
         deps = AssistantDeps(
             search_backend=settings.search_backend,
             safesearch=settings.safesearch,

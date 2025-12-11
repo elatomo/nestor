@@ -1,10 +1,11 @@
 """Tests for agent factory functions."""
 
+from pydantic import SecretStr
 from pydantic_ai import Agent, models
 from pydantic_ai.models.test import TestModel
 
+from nestor import defaults
 from nestor.agents import create_agent
-from nestor.config import settings
 
 models.ALLOW_MODEL_REQUESTS = False
 
@@ -14,11 +15,11 @@ class TestCreateAgent:
 
     def test_creates_agent_without_deps(self):
         """Should create agent without dependencies."""
-        agent = create_agent(output_type=str)
+        agent = create_agent(output_type=str, api_key=SecretStr("secret-api-key"))
 
         assert isinstance(agent, Agent)
         assert agent.output_type is str
-        assert agent.model.model_name == settings.default_model
+        assert agent.model.model_name == defaults.MODEL
         assert agent.deps_type is type(None)
 
     def test_creates_agent_with_deps(self):
@@ -27,7 +28,11 @@ class TestCreateAgent:
         class MyDeps:
             value: int = 42
 
-        agent = create_agent(output_type=str, deps_type=MyDeps)
+        agent = create_agent(
+            output_type=str,
+            api_key=SecretStr("secret-api-key"),
+            deps_type=MyDeps,
+        )
 
         assert isinstance(agent, Agent)
         assert agent.deps_type is MyDeps
@@ -36,6 +41,7 @@ class TestCreateAgent:
         """Should accept custom model name."""
         agent = create_agent(
             output_type=str,
+            api_key=SecretStr("secret-api-key"),
             model_name="gpt-4o-mini",
         )
 
@@ -45,6 +51,7 @@ class TestCreateAgent:
         """Should accept custom agent name."""
         agent = create_agent(
             output_type=str,
+            api_key=SecretStr("secret-api-key"),
             name="test_agent",
         )
 
@@ -52,7 +59,7 @@ class TestCreateAgent:
 
     def test_with_test_model(self):
         """Should execute successfully with TestModel."""
-        agent = create_agent(output_type=str)
+        agent = create_agent(output_type=str, api_key=SecretStr("secret-api-key"))
 
         # Override with test model
         with agent.override(model=TestModel()):
