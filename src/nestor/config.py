@@ -12,7 +12,9 @@ from . import defaults
 class Settings(BaseSettings):
     """Application settings."""
 
-    model_config = SettingsConfigDict(env_file=".env", frozen=True)
+    model_config = SettingsConfigDict(
+        env_file=".env", env_prefix="nestor_", frozen=True
+    )
 
     # LLM
     openai_api_key: SecretStr
