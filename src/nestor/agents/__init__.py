@@ -1,7 +1,7 @@
 """Agent creation utilities for Néstor."""
 
 from types import NoneType
-from typing import TypeVar, overload
+from typing import TypeVar
 
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
@@ -13,28 +13,6 @@ T = TypeVar("T")
 D = TypeVar("D")
 
 
-@overload
-def create_agent(
-    output_type: type[T],
-    *,
-    instructions: str,
-    model_name: str | None = None,
-    deps_type: None = None,
-    name: str | None = None,
-) -> Agent[None, T]: ...
-
-
-@overload
-def create_agent(
-    output_type: type[T],
-    *,
-    instructions: str,
-    model_name: str | None = None,
-    deps_type: type[D],
-    name: str | None = None,
-) -> Agent[D, T]: ...
-
-
 def create_agent(
     output_type: type[T],
     *,
@@ -42,7 +20,7 @@ def create_agent(
     model_name: str | None = None,
     deps_type: type[D] | None = None,
     name: str | None = None,
-) -> Agent[None, T] | Agent[D, T]:
+) -> Agent[D, T]:
     """Create a Néstor agent with common configuration.
 
     Args:
