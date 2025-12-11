@@ -8,9 +8,8 @@ from typing import Any
 import click
 from pydantic_ai.exceptions import UnexpectedModelBehavior
 
-from .agents.assistant import create_assistant_agent
+from . import AssistantDeps, create_assistant_agent
 from .config import settings
-from .dependencies import AssistantDeps
 
 logger = logging.getLogger("nestor")
 
