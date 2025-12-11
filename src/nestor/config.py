@@ -3,10 +3,10 @@
 Loads settings from environment variables and .env file.
 """
 
-from typing import Literal
-
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from . import defaults
 
 
 class Settings(BaseSettings):
@@ -16,16 +16,16 @@ class Settings(BaseSettings):
 
     # LLM
     openai_api_key: SecretStr
-    default_model: str = "gpt-4.1-nano"
-    max_retries: int = 2
+    default_model: str = defaults.MODEL
+    max_retries: int = defaults.MAX_RETRIES
 
     # Search
     search_backend: str = Field(
-        default="auto",
+        default=defaults.SEARCH_BACKEND,
         description="DDGS backend(s): 'auto', 'wikipedia,duckduckgo', etc.",
     )
-    safesearch: Literal["on", "moderate", "off"] = Field(
-        default="moderate",
+    safesearch: defaults.SafeSearchLevel = Field(
+        default=defaults.SAFESEARCH,
         description="Safe search level: 'on', 'moderate', or 'off'",
     )
 
