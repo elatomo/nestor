@@ -24,6 +24,15 @@ wheels = [
 ]
 
 [[package]]
+name = "async-lru"
+version = "2.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/c3/bbf34f15ea88dfb649ab2c40f9d75081784a50573a9ea431563cab64adb8/async_lru-2.1.0.tar.gz", hash = "sha256:9eeb2fecd3fe42cc8a787fc32ead53a3a7158cc43d039c3c55ab3e4e5b2a80ed", size = 12041, upload-time = "2026-01-17T22:52:18.931Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2e/e9/eb6a5db5ac505d5d45715388e92bced7a5bb556facc4d0865d192823f2d2/async_lru-2.1.0-py3-none-any.whl", hash = "sha256:fa12dcf99a42ac1280bc16c634bbaf06883809790f6304d85cdab3f666f33a7e", size = 6933, upload-time = "2026-01-17T22:52:17.389Z" },
+]
+
+[[package]]
 name = "brotli"
 version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -500,6 +509,7 @@ name = "nestor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "async-lru" },
     { name = "click" },
     { name = "ddgs" },
     { name = "httpx" },
@@ -518,6 +528,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "async-lru", specifier = ">=2.1.0" },
     { name = "click", specifier = ">=8.3.0" },
     { name = "ddgs", specifier = ">=9.6.1" },
     { name = "httpx", specifier = ">=0.28.1" },

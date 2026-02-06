@@ -3,6 +3,7 @@
 import logging
 
 import httpx
+from async_lru import alru_cache
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,7 @@ class GeoLocation(BaseModel):
         return f"https://www.openstreetmap.org/?mlat={self.latitude}&mlon={self.longitude}&zoom=14"
 
 
+@alru_cache
 async def geocode(query: str) -> GeoLocation | None:
     """Resolve a location name to coordinates.
 
