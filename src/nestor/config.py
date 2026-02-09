@@ -31,6 +31,12 @@ class Settings(BaseSettings):
         description="Safe search level: 'on', 'moderate', or 'off'",
     )
 
+    # Weather
+    default_location: str = Field(
+        default=defaults.DEFAULT_LOCATION,
+        description="Default location for weather queries. Location name, city or postal code.",
+    )
+
 
 # Global settings instance
 settings = Settings()

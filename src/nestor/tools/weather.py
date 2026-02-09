@@ -5,8 +5,12 @@ import logging
 import httpx
 from async_lru import alru_cache
 from pydantic import BaseModel
+from pydantic_ai import RunContext
+
+from ..dependencies import AssistantDeps
 
 logger = logging.getLogger(__name__)
+
 
 GEOCODING_API = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST_API = "https://api.open-meteo.com/v1/forecast"
@@ -144,18 +148,22 @@ async def geocode(query: str) -> GeoLocation | None:
     return result
 
 
-async def get_weather(location: str) -> WeatherForecast | None:
+async def get_weather(
+    ctx: RunContext[AssistantDeps], location: str | None = None
+) -> WeatherForecast | None:
     """Get 3-day weather forecast for a location.
 
     Provides daily summaries including temperature range, precipitation,
     and wind conditions. Useful for planning outdoor activities.
 
     Args:
-        location: Location name, city, or postal code.
+        ctx: Agent run context
+        location: Location name, city, or postal code. Uses default if not specified.
 
     Returns:
         Weather forecast with daily summaries, or None if location not found.
     """
+    location = location or ctx.deps.default_location
     geo = await geocode(location)
     if not geo:
         return None

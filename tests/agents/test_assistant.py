@@ -4,7 +4,6 @@ from pydantic_ai import models
 from pydantic_ai.models.test import TestModel
 
 from nestor.agents.assistant import create_assistant_agent
-from nestor.dependencies import AssistantDeps
 
 models.ALLOW_MODEL_REQUESTS = False
 
@@ -15,15 +14,6 @@ def agent():
     agent = create_assistant_agent(api_key=SecretStr("secret-api-key"))
     with agent.override(model=TestModel()):
         yield agent
-
-
-@pytest.fixture
-def deps():
-    """Test dependencies."""
-    return AssistantDeps(
-        search_backend="auto",
-        safesearch="moderate",
-    )
 
 
 class TestAssistant:

@@ -1,19 +1,10 @@
+import dataclasses
 import logging
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from nestor.dependencies import AssistantDeps
 from nestor.tools.websearch import web_search
-
-
-@pytest.fixture
-def deps():
-    """Sample dependencies."""
-    return AssistantDeps(
-        search_backend="auto",
-        safesearch="moderate",
-    )
 
 
 @pytest.fixture
@@ -139,12 +130,11 @@ class TestWebSearch:
         assert "ValidationError" in caplog.text
 
     @pytest.mark.asyncio
-    async def test_uses_deps_configuration(self, ddgs, search_results):
+    async def test_uses_deps_configuration(self, deps, ddgs, search_results):
         """Should use safesearch and backend from deps."""
         # Custom deps
-        custom_deps = AssistantDeps(
-            search_backend="wikipedia",
-            safesearch="off",
+        custom_deps = dataclasses.replace(
+            deps, search_backend="wikipedia", safesearch="off"
         )
         ctx = MagicMock(deps=custom_deps)
 

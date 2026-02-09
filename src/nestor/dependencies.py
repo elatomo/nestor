@@ -11,3 +11,4 @@ class AssistantDeps:
 
     search_backend: str
     safesearch: defaults.SafeSearchLevel
+    default_location: str

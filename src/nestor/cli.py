@@ -90,6 +90,7 @@ async def _run_assistant(
         deps = AssistantDeps(
             search_backend=settings.search_backend,
             safesearch=settings.safesearch,
+            default_location=settings.default_location,
         )
 
         result = await agent.run(

@@ -6,6 +6,7 @@ from pydantic_ai import Agent
 from .. import defaults
 from ..dependencies import AssistantDeps
 from ..tools.datetime import get_current_date, get_current_time
+from ..tools.weather import get_weather
 from ..tools.websearch import web_search
 from . import create_agent
 
@@ -34,5 +35,6 @@ def create_assistant_agent(
     agent.tool(get_current_date)
     agent.tool(get_current_time)
     agent.tool(web_search)
+    agent.tool(get_weather)
 
     return agent
