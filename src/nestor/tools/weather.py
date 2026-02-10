@@ -149,9 +149,11 @@ async def geocode(query: str) -> GeoLocation | None:
 
 
 async def get_weather(
-    ctx: RunContext[AssistantDeps], location: str | None = None
+    ctx: RunContext[AssistantDeps],
+    location: str | None = None,
+    forecast_days: int | None = None,
 ) -> WeatherForecast | None:
-    """Get 3-day weather forecast for a location.
+    """Get weather forecast for a location.
 
     Provides daily summaries including temperature range, precipitation,
     and wind conditions. Useful for planning outdoor activities.
@@ -159,11 +161,14 @@ async def get_weather(
     Args:
         ctx: Agent run context
         location: Location name, city, or postal code. Uses default if not specified.
+        forecast_days: Number of days (1-16). Defaults to 3. Use 1 for today,
+            5-7 for "this week", etc.
 
     Returns:
         Weather forecast with daily summaries, or None if location not found.
     """
     location = location or ctx.deps.default_location
+    forecast_days = max(1, min(16, forecast_days or 3))
     geo = await geocode(location)
     if not geo:
         return None
@@ -184,7 +189,7 @@ async def get_weather(
             ]
         ),
         "timezone": "auto",
-        "forecast_days": 3,  # NOTE: Hardcoded for now
+        "forecast_days": forecast_days,
     }
 
     async with httpx.AsyncClient() as client:
