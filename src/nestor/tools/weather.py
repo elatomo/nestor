@@ -1,6 +1,7 @@
 """Weather and location tools."""
 
 import logging
+from datetime import UTC, datetime
 
 import httpx
 from async_lru import alru_cache
@@ -103,6 +104,44 @@ class WeatherForecast(BaseModel):
     location: str
     elevation: float
     days: list[DailyForecast]
+
+
+class HourData(BaseModel):
+    """Single hour conditions."""
+
+    time: str
+    """Hour in HH:MM format (local time)."""
+
+    temp: float
+    """Temperature in °C."""
+
+    precipitation_probability: int
+    """Probability of precipitation (0-100%)."""
+
+    precipitation: float
+    """Precipitation amount in mm."""
+
+    weather_code: int
+    """WMO weather code."""
+
+    weather_description: str
+    """Human-readable weather condition."""
+
+    is_day: bool
+    """True during daylight hours."""
+
+
+class HourlyForecast(BaseModel):
+    """Hourly weather for a single day."""
+
+    location: str
+    """Location name."""
+
+    date: str
+    """ISO date (YYYY-MM-DD)."""
+
+    hours: list[HourData]
+    """24 hours of weather data."""
 
 
 @alru_cache
@@ -219,4 +258,74 @@ async def get_weather(
         location=geo.name,
         elevation=geo.elevation,
         days=days,
+    )
+
+
+async def get_hourly_forecast(
+    ctx: RunContext[AssistantDeps],
+    location: str | None = None,
+    date: str | None = None,
+) -> HourlyForecast | None:
+    """Get hour-by-hour weather for a specific day.
+
+    Useful for planning time-sensitive outdoor activities like hanging laundry,
+    running, or hiking. Returns precipitation probability and dry/wet status
+    for each hour.
+
+    Args:
+        ctx: Agent context
+        location: Location name, city, or postal code. Uses default if not specified.
+        date: ISO date (YYYY-MM-DD) to get forecast for. Defaults to today.
+            Use get_current_date to determine today's date if needed.
+
+    Returns:
+        Hourly forecast or None if location not found.
+    """
+    location = location or ctx.deps.default_location
+    target_date = date or datetime.now(UTC).date().isoformat()
+    geo = await geocode(location)
+    if not geo:
+        return None
+
+    params: dict[str, str | float] = {
+        "latitude": geo.latitude,
+        "longitude": geo.longitude,
+        "hourly": ",".join(
+            [
+                "temperature_2m",
+                "precipitation_probability",
+                "precipitation",
+                "weather_code",
+                "is_day",
+            ]
+        ),
+        "timezone": "auto",
+        "start_date": target_date,
+        "end_date": target_date,
+    }
+
+    async with httpx.AsyncClient() as client:
+        r = await client.get(FORECAST_API, params=params)
+        data = r.json()
+
+    hourly = data["hourly"]
+    hours = [
+        HourData(
+            time=hourly["time"][i].split("T")[1][:5],
+            temp=hourly["temperature_2m"][i],
+            precipitation_probability=hourly["precipitation_probability"][i],
+            precipitation=hourly["precipitation"][i],
+            weather_code=hourly["weather_code"][i],
+            weather_description=WEATHER_CODES.get(hourly["weather_code"][i]),
+            is_day=bool(hourly["is_day"][i]),
+        )
+        for i in range(len(hourly["time"]))
+    ]
+
+    logger.info("Fetched hourly forecast for %s on %s", geo.name, target_date)
+
+    return HourlyForecast(
+        location=geo.name,
+        date=target_date,
+        hours=hours,
     )
