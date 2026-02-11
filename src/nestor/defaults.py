@@ -4,7 +4,7 @@ from typing import Literal
 
 SafeSearchLevel = Literal["on", "moderate", "off"]
 
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-5-nano"
 MAX_RETRIES = 2
 SEARCH_BACKEND = "auto"
 SAFESEARCH: SafeSearchLevel = "moderate"
