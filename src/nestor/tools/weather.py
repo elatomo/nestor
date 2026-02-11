@@ -204,7 +204,15 @@ async def get_weather(
             5-7 for "this week", etc.
 
     Returns:
-        Weather forecast with daily summaries, or None if location not found.
+        Weather forecast with daily summaries starting today, or None in case
+            of errors or location not found.
+
+    Examples:
+        >>> # Weather in the default location for today, tomorrow and the day after
+        >>> await get_weather(ctx)
+
+        >>> # Weather in Segovia for today and tomorrow
+        >>> await get_weather(ctx, location="Segovia", forecast_days=2)
     """
     location = location or ctx.deps.default_location
     forecast_days = max(1, min(16, forecast_days or 3))
