@@ -5,14 +5,15 @@
 # Néstor
 
 Néstor is my personal AI assistant project. The core idea is simple: use a cheap
-capable model (gpt-4o-mini) as a natural language interface to useful functions.
+capable model (gpt-5-nano) as a natural language interface to useful functions.
 
 I mainly use it through my [Matrix bot](https://github.com/elatomo/nestor-matrix),
-but the core library works standalone via CLI. Eventually I might swap the model
-for something that runs locally.
+but the core library works standalone via CLI.
 
-You're welcome to use it as reference, fork it, or steal ideas for your own
-experiments.
+This is primarily a learning project to experiment with
+[pydantic-ai](https://ai.pydantic.dev/) and agentic patterns. Eventually I might
+swap the model for something that runs locally. You're welcome to use it as
+reference, fork it, or steal ideas for your own experiments.
 
 ## Features
 
