@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 GEOCODING_API = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST_API = "https://api.open-meteo.com/v1/forecast"
+# Default timeout in seconds for Open-Meteo API calls
+HTTP_TIMEOUT = 10.0
 
 # Weather codes: https://open-meteo.com/en/docs#weather_variable_documentation
 WEATHER_CODES = {
@@ -163,7 +165,7 @@ async def geocode(query: str) -> GeoLocation | None:
     Returns:
         GeoLocation with coordinates and elevation, or None if not found
     """
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
         r = await client.get(GEOCODING_API, params={"name": query, "count": 1})
         data = r.json()
 
@@ -239,7 +241,7 @@ async def get_weather(
         "forecast_days": forecast_days,
     }
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
         r = await client.get(FORECAST_API, params=params)
         data = r.json()
 
@@ -312,7 +314,7 @@ async def get_hourly_forecast(
         "end_date": target_date,
     }
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
         r = await client.get(FORECAST_API, params=params)
         data = r.json()
 
