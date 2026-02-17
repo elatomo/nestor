@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 GEOCODING_API = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST_API = "https://api.open-meteo.com/v1/forecast"
 # Default timeout in seconds for Open-Meteo API calls
-HTTP_TIMEOUT = 10.0
+HTTP_TIMEOUT = 30.0
 
 # Weather codes: https://open-meteo.com/en/docs#weather_variable_documentation
 WEATHER_CODES = {
